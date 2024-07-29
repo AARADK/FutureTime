@@ -1,0 +1,190 @@
+import React, { Suspense, useEffect, useState } from 'react'
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import { Formik, Field , Form} from 'formik'
+
+import './scss/style.scss'
+
+const FormSample = () => {
+    
+    const horoscopes = [
+        "Aquarius", "Aries", "Cancer", "Capricornus", "Gemini", "Leo",
+        "Libra", "Pisces", "Sagittarius", "Scorpius", "Tarus", "Virgo"
+    ];
+
+    const [form, setForm] = useState({
+        date: "",
+        name: "",
+        rating: "",
+        description: ""
+    })
+
+    const [tableItems, setTableItems] = useState([]);
+
+    const [updateIndex, setUpdateIndex] = useState(-1);
+
+    //hold array of form
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        setTableItems(
+            items.map(m => ({
+                name: m.name,
+                rating: m.rating,
+                description: m.description
+            }))
+        );
+    }, [items]) 
+
+    const AddItems = () => {
+        if (updateIndex == -1) {
+            if (items.findIndex(a => a.name == form.name) >= 0) {
+                alert("Duplicate");
+                return;
+            }
+            setItems(p => [
+                ...p,
+                form
+            ]);
+        }
+        else {
+            if (items.findIndex(a => a.name == form.name) >= 0) {
+                alert("Duplicate");
+                return;
+            }
+            var a = [...items];
+            a[updateIndex] = form;
+            setItems(a)
+        }
+        setUpdateIndex(-1)
+
+        setForm({
+            name: "",
+            description: "",
+            rating: ""
+        })
+    }
+
+    const Edit = (i) => {
+        setForm(p => ({
+            ...p,
+            name: items[i].name,
+            rating: items[i].rating,
+            description: items[i].description
+        }))
+        setUpdateIndex(i);
+    }
+
+    const DeleteItem = (i) => {
+        // setItems(p=>[
+        //     ...p,
+        //     form
+        // ])
+        var a = [...items];
+        a.splice(i, 1);
+        setItems(a)
+    }
+
+    const createJsonFile = () => {
+        const json = JSON.stringify(tableItems, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'horoscopeData.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    const tableitems = items.length;
+
+    return (
+        <Formik 
+        initialValues={{
+            date: new Date().toISOString().substr(0, 10),
+            name: '',
+            rating: '',
+            description: ''
+        }}
+        >
+            <Form>
+                Date: <Field type='date' name='date' className='input-box' />
+                <br/>
+                Horoscope <input
+                    type="input"
+                    value={form.name}
+                    onChange={e => {
+                        setForm(p => (
+                            {
+                                ...p,
+                                name: e.target.value
+                            }
+                        ))
+                    }}
+                />
+                <br />
+                Rating <input
+                    type="number"
+                    id='rating'
+                    value={form.rating}
+                    onChange={e => {
+                        setForm(p => (
+                            {
+                                ...p,
+                                rating: e.target.value
+                            }
+                        ))
+                    }}
+                />
+                <br />
+                Description <input
+                    type="text"
+                    value={form.description}
+                    onChange={e => {
+                        setForm(p => (
+                            {
+                                ...p,
+                                description: e.target.value
+                            }
+                        ))
+                    }}
+                />
+                <br/>
+                <button
+                    onClick={AddItems}
+                >
+                    {updateIndex == -1 ? "Add" : "Update"}
+                </button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Horoscope</th>
+                            <th>Rating</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map((m, i) => (
+                            <tr>
+                                <td>{m.name}</td>
+                                <td>{m.rating}</td>
+                                <td>{m.description}</td>
+                                <td>
+                                    <button onClick={e => Edit(i)}>Edit</button>
+                                    <button onClick={e => DeleteItem(i)}>Del</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {tableitems==12 ? <button type='submit' onClick={createJsonFile}>Submit</button>:<></>}
+
+            </Form>
+        </Formik>
+    )
+}
+
+export default FormSample

@@ -1,0 +1,263 @@
+import React, { useEffect } from 'react'
+import { useColorModes } from '@coreui/react'
+import { useSelector } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
+
+import './rashi.css'
+
+const horoscopes = [
+    "aquarius",
+    "aries",
+    "cancer",
+    "capricornus",
+    "gemini",
+    "leo",
+    "libra",
+    "pisces",
+    "sagittarius",
+    "scorpius",
+    "tarus",
+    "virgo"
+];
+
+const DailyRashiUpdates = () => {
+
+    const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
+    const storedTheme = useSelector((state) => state.theme)
+  
+    useEffect(() => {
+      const urlParams = new URLSearchParams(window.location.href.split('?')[1])
+      const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0]
+      if (theme) {
+        setColorMode(theme)
+      }
+  
+      if (isColorModeSet()) {
+        return
+      }
+  
+      setColorMode(storedTheme)
+    }, []) 
+  
+    return (
+        <form>
+            <div className='outer-div'>
+                <div className='outer-header'>
+                    <h1 className='heading'>Daily Horoscope</h1>
+                </div>
+                <div className='inner-div'>
+                    <div className='date-bar'>
+                        <input type='date' className='input-box' />
+                    </div>
+                    <div className='rashi-rating'>
+                        <select name='horoscopes' id='horoscopes'>
+                                {horoscopes.map(m => (
+                                    <option value={m}>{m}</option>
+                                ))}
+                        </select>
+                        <input type='text' placeholder='Rating (1-10)' />
+                    </div>
+                    <div className='description'>
+                        <textarea placeholder='Description' rows='8' className='textfield' />
+                        <div className='clear-add'>
+                            <button className='in-form-button clear-button'>Clear</button>
+                            <button className='in-form-button add-button'>Add</button>
+                        </div>
+                    </div>
+                    <div className='tablediv'>
+                        <textarea placeholder='Table' rows='8' className='textfield' />
+                        <div className='tableaction'>
+                            <p className='actiontext'>Action</p>
+                            <button className='in-form-button edit-button'>Edit</button>
+                            <button className='in-form-button delete-button'>Delete</button>
+                        </div>
+                    </div>
+                    <div className='submitdiv'>
+                        <button className='in-form-button submit-button'>Submit</button>       
+                    </div>
+                </div>
+            </div>
+        </form>
+    );
+
+}
+
+export default DailyRashiUpdates;
+
+---------------------------------------------------------------------------------------------------------------------------------------
+#######################################################################################################################################
+---------------------------------------------------------------------------------------------------------------------------------------
+
+.outer-div {
+    position: relative;
+    height: 100%;
+    width: 100vw;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: black;
+}
+
+.outer-header {
+    margin: 5px;
+    position: relative;
+    flex: 1;
+    background-color: hsl(0, 0%, 100%);
+    color: hsl(0, 0%, 0%);
+}
+
+.heading{
+    padding-top: 5px;
+    padding-left: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: serif;
+}
+
+.inner-div{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content:flex-start;
+    margin: 5px;
+    flex: 10;
+    height: 80vh;
+    width: 100vw;
+    background-color: hsl(0, 0%, 16%);
+}
+
+.date-bar {
+    display: flex;
+    align-content: center;
+    flex: 100%;
+    height: auto;
+}
+
+.date-bar input[type='date'] {
+    margin: 20px;
+    width: 30%;
+    height: 30px;
+}
+
+.rashi-rating {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    flex: 100%;
+    height: auto;
+}
+
+.rashi-rating select {
+    margin: 20px;
+    width: 30%;
+}
+
+.rashi-rating input[type='text'] {
+    margin: 20px;
+    width: 30%;
+    margin-left: 20vw;
+}
+
+.description {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    flex: 100%;
+    height: auto;
+}
+
+.textfield {
+    margin: 20px;
+    width: 30vw;
+    resize: none;
+    height: auto;
+    padding-left: 10px;
+    overflow: scroll;
+}
+
+.textfield::placeholder {
+    text-align: center;
+}
+
+.textfield::-webkit-scrollbar {
+    width: 10px;
+    height: 0px;
+}
+
+.clear-add {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    height: inherit;
+    width: 30vw;
+    margin: 20px;
+    margin-left: 20vw;
+}
+
+.in-form-button {
+    height: 5vh;
+    width: 7vw;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.clear-button {
+    margin-right: 10px;
+}
+
+.add-button {
+    margin-right: 10px;
+}
+
+.tablediv {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    flex: 100%;
+    height: auto;
+    border-top: 3px solid black
+}
+
+.tableaction {
+    text-align: center;
+    align-content: center;
+}
+
+.actiontext {
+    background-color: red;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.edit-button {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.delete-button {
+    margin-right: 10px;
+}
+
+.submitdiv {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 100%;
+    justify-content: center;
+    margin: 20px;
+}
+
+.submit-button {
+    margin-left: 55vw;
+    margin-top: 5vh;
+}
+
+::-webkit-scrollbar {
+    height: 0px;
+    width: 15px;
+}

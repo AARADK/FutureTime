@@ -1,0 +1,112 @@
+import React, { useEffect } from 'react';
+import { useColorModes } from '@coreui/react';
+import { useSelector } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+
+import './rashi.css';
+
+const horoscopes = [
+    "aquarius",
+    "aries",
+    "cancer",
+    "capricornus",
+    "gemini",
+    "leo",
+    "libra",
+    "pisces",
+    "sagittarius",
+    "scorpius",
+    "tarus",
+    "virgo"
+];
+
+const DailyRashiUpdates = () => {
+    const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme');
+    const storedTheme = useSelector((state) => state.theme);
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.href.split('?')[1]);
+        const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0];
+        if (theme) {
+            setColorMode(theme);
+        }
+
+        if (isColorModeSet()) {
+            return;
+        }
+
+        setColorMode(storedTheme);
+    }, []);
+
+    const handleSubmit = (values, actions) => {
+        // Handle form submission here
+        console.log(values);
+        actions.resetForm(); // Optional: Reset the form after submission
+    };
+
+    const handleClear = (resetForm) => {
+        resetForm();
+    };
+
+    return (
+        <Formik
+            initialValues={{
+                date: '',
+                horoscope: '',
+                rating: '',
+                description: '',
+                table: ''
+            }}
+            onSubmit={handleSubmit}
+            validate={(values) => {
+                const errors = {};
+                // Add validation rules here if needed
+                return errors;
+            }}
+        >
+            {({ isSubmitting, resetForm }) => (
+                <Form>
+                    <div className='outer-div'>
+                        <div className='outer-header'>
+                            <h1 className='heading'>Daily Horoscope</h1>
+                        </div>
+                        <div className='inner-div'>
+                            <div className='date-bar'>
+                                <Field type='date' name='date' className='input-box' />
+                            </div>
+                            <div className='rashi-rating'>
+                                <Field as='select' name='horoscope' id='horoscope' className='input-box'>
+                                    <option value=''>Select Horoscope</option>
+                                    {horoscopes.map((m) => (
+                                        <option key={m} value={m}>{m}</option>
+                                    ))}
+                                </Field>
+                                <Field type='text' name='rating' placeholder='Rating (1-10)' className='input-box' />
+                            </div>
+                            <div className='description'>
+                                <Field as='textarea' name='description' placeholder='Description' rows='8' className='textfield' />
+                                <div className='clear-add'>
+                                    <button type='button' className='in-form-button clear-button' onClick={() => handleClear(resetForm)}>Clear</button>
+                                    <button type='button' className='in-form-button add-button'>Add</button>
+                                </div>
+                            </div>
+                            <div className='tablediv'>
+                                <Field as='textarea' name='table' placeholder='Table' rows='8' className='textfield' />
+                                <div className='tableaction'>
+                                    <p className='actiontext'>Action</p>
+                                    <button type='button' className='in-form-button edit-button'>Edit</button>
+                                    <button type='button' className='in-form-button delete-button'>Delete</button>
+                                </div>
+                            </div>
+                            <div className='submitdiv'>
+                                <button type='submit' className='in-form-button submit-button' disabled={isSubmitting}>Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </Form>
+            )}
+        </Formik>
+    );
+};
+
+export default DailyRashiUpdates;

@@ -1,0 +1,189 @@
+.outer-div {
+    position: relative;
+    height: 100%;
+    width: 100vw;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: black;
+}
+
+.outer-header {
+    margin: 5px;
+    position: relative;
+    flex: 1;
+    background-color: hsl(0, 0%, 100%);
+    color: hsl(0, 0%, 0%);
+}
+
+.heading {
+    padding-top: 5px;
+    padding-left: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: serif;
+}
+
+.inner-div {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    margin: 5px;
+    flex: 10;
+    height: 80vh;
+    width: 100vw;
+    background-color: hsl(0, 0%, 16%);
+}
+
+.date-bar {
+    display: flex;
+    align-content: center;
+    flex: 100%;
+    height: auto;
+}
+
+.date-bar input[type='date'] {
+    margin: 20px;
+    width: 30%;
+    height: 30px;
+}
+
+.rashi-rating {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center; /* Align items instead of content */
+    flex: 100%;
+    height: auto;
+}
+
+.rashi-rating select,
+.rashi-rating input[type='text'] {
+    margin: 20px;
+    width: 30%;
+}
+
+.description {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center; /* Align items instead of content */
+    flex: 100%;
+    height: auto;
+}
+
+.textfield {
+    margin: 20px;
+    width: 30vw;
+    resize: none;
+    height: auto;
+    padding-left: 10px;
+    overflow: scroll;
+}
+
+.textfield::placeholder {
+    text-align: center;
+}
+
+.textfield::-webkit-scrollbar {
+    width: 10px;
+    height: 0px;
+}
+
+.clear-add {
+    display: flex;
+    align-items: flex-end; /* Align items instead of content */
+    justify-content: flex-end; /* Justify content instead of end */
+    height: auto;
+    width: 100%;
+    margin: 20px;
+}
+
+.in-form-button {
+    height: 5vh;
+    width: 7vw;
+    font-size: 0.8em;
+    text-align: center;
+    margin-right: 10px; /* Add margin-right for spacing */
+}
+
+.clear-button {
+    margin-right: 10px;
+}
+
+.add-button {
+    margin-right: 10px;
+}
+
+.tablediv {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 100%;
+    height: auto;
+    margin-top: 20px; /* Add margin-top for spacing */
+    border-top: 3px solid black;
+    overflow-x: auto; /* Enable horizontal scroll for table */
+}
+
+.table {
+    width: 80%; /* Adjust width as needed */
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 10px;
+    border: 1px solid #db0c0c;
+    cursor: pointer;
+}
+
+.table th {
+    background-color: #152475;
+    text-align: left;
+}
+
+.table th:hover {
+    background-color: #af5858;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+.submitdiv {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.submit-button {
+    height: 5vh;
+    width: 10vw;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.table-content {
+    margin-top: 20px;
+}
+
+.submitted-data {
+    margin-left: 20px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 20px; /* Adjust margin as needed */
+    display: block;
+}
