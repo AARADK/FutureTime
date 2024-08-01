@@ -51,8 +51,11 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
+const FormSample = React.lazy(() => import('./FormSample'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  { path: '/form-sample', name: 'Dailyupdate', element: FormSample },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

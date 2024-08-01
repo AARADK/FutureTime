@@ -12,7 +12,7 @@ import FormSample from './FormSample'
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     {/* <DailyRashiUpdates/> */}
-    <FormSample />
-    {/* <App /> */}
+    {/* <FormSample /> */}
+    <App />
   </Provider>,
 )

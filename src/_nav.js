@@ -33,8 +33,8 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Daily Rashi Updates',
-    to: '/rashi',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    to: '/form-sample'
   },
   {
     component: CNavTitle,

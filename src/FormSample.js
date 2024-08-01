@@ -3,12 +3,10 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup'; 
 import { useSelector } from 'react-redux';
 import { useColorModes } from '@coreui/react';
+import { CFormInput, CFormSelect, CFormTextarea, CButton, CTable, CTableBody, CTableHeaderCell, CTableRow, CTableDataCell } from '@coreui/react';
 import '/src/scss/style.scss';
-import { AppHeader, AppSidebar, AppFooter, AppContent } from './components';
-import { BrowserRouter as Router } from 'react-router-dom';
 
 const FormSample = () => {
-
     const [tableItems, setTableItems] = useState([]);
     const [updateIndex, setUpdateIndex] = useState(-1);
     const [items, setItems] = useState([]);
@@ -26,7 +24,7 @@ const FormSample = () => {
         {id: 11, name: "Taurus"},
         {id: 12, name: "Virgo"},
     ]);
-    
+
     const validationSchema = Yup.object({
         date: Yup.date().required('Date is required'),
         name: Yup.string().oneOf(horoscopes.map(h => h.name), 'Invalid horoscope').required('Horoscope is required'),
@@ -51,15 +49,11 @@ const FormSample = () => {
                 alert("Duplicate");
                 return;
             }
-            setItems(prevItems => [
-                ...prevItems,
-                { id: horoscopes.find(h => h.name===values.name).id, ...values }
-            ]);
+            const newItem = { id: horoscopes.find(h => h.name === values.name).id, ...values };
+            setItems(prevItems => [...prevItems, newItem]);
         } else {
-    
             const currentItem = items[updateIndex];
-
-            if (items.findIndex(a => a.name === values.name && a.id != currentItem.id) >= 0) {
+            if (items.findIndex(a => a.name === values.name && a.id !== currentItem.id) >= 0) {
                 alert("Duplicate");
                 return;
             }
@@ -107,102 +101,97 @@ const FormSample = () => {
     };
 
     const tableitems = items.length;
-    const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
-    const storedTheme = useSelector((state) => state.theme)
+    const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme');
+    const storedTheme = useSelector((state) => state.theme);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.href.split('?')[1])
-        const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0]
+        const urlParams = new URLSearchParams(window.location.href.split('?')[1]);
+        const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0];
         if (theme) {
-        setColorMode(theme)
+            setColorMode(theme);
         }
 
         if (isColorModeSet()) {
-        return
+            return;
         }
 
-        setColorMode(storedTheme)
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+        setColorMode(storedTheme);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <>
-            <Router>
-                <div>
-                    <AppSidebar />
-                    <div className="wrapper d-flex flex-column min-vh-100">
-                        <AppHeader />
-                        <div className="body flex-grow-1">
-                            {
-                                <Formik
-                                initialValues={{
-                                    date: new Date().toISOString().substring(0, 10),
-                                    id: '',
-                                    name: '',
-                                    rating: '',
-                                    description: ''
-                                }}
-                                validationSchema={validationSchema}
-                                onSubmit={AddItems}
-                            >
-                                {({ handleSubmit, errors, touched, setValues }) => (
-                                    <Form onSubmit={handleSubmit}>
-                                        Date: <Field type='date' name='date' className='input-box' />
-                                        <br/>
-                                        Horoscope
-                                        <Field as="select" name="name" className="input-box" disabled={updateIndex !== -1} >
-                                            <option value="">Select Horoscope</option>
-                                            {horoscopes.slice().sort((a,b) => a.name.localeCompare(b.name)).map(h => (
-                                                <option key={h.id} value={h.name}>{h.name}</option>
-                                            ))}
-                                        </Field>
-                                        {errors.name && touched.name ? <div className="error">{errors.name}</div> : null}
-                                        <br />
-                                        Rating
-                                        <Field as="input" type="number" name="rating" className="input-box" />
-                                        {errors.rating && touched.rating ? <div className="error">{errors.rating}</div> : null}
-                                        <br />
-                                        Description
-                                        <Field as="textarea" name="description" className="input-box" />
-                                        {errors.description && touched.description ? <div className="error">{errors.description}</div> : null}
-                                        <br/>
-                                        <button type="submit">
-                                            {updateIndex === -1 ? "Add" : "Update"}
-                                        </button>
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Horoscope</th>
-                                                    <th>Rating</th>
-                                                    <th>Description</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {items.map((m, i) => (
-                                                    <tr key={i}>
-                                                        <td>{m.name}</td>
-                                                        <td>{m.rating}</td>
-                                                        <td>{m.description}</td>
-                                                        <td>
-                                                            <button type="button" onClick={() => Edit(i, setValues)}>Edit</button>
-                                                            <button type="button" onClick={() => DeleteItem(i)}>Del</button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                        {tableitems === 12 ? (
-                                            <button type='button' onClick={createJsonFile}>Submit</button>
-                                        ) : null}
-                                    </Form>
-                                )}
-                            </Formik>
-                            }
+            <Formik
+                initialValues={{
+                    date: new Date().toISOString().substring(0, 10),
+                    id: '',
+                    name: '',
+                    rating: '',
+                    description: ''
+                }}
+                validationSchema={validationSchema}
+                onSubmit={AddItems}
+            >
+                {({ handleSubmit, errors, touched, setValues }) => (
+                    <Form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label htmlFor="date">Date</label>
+                            <Field as={CFormInput} type='date' id='date' name='date' />
+                            {errors.date && touched.date && <div className="text-danger">{errors.date}</div>}
                         </div>
-                        <AppFooter />
-                    </div>
-                </div>
-            </Router>
+                        <div className="mb-3">
+                            <label htmlFor="name">Horoscope</label>
+                            <Field as={CFormSelect} name="name" id="name" disabled={updateIndex !== -1}>
+                                <option value="">Select Horoscope</option>
+                                {horoscopes.slice().sort((a,b) => a.name.localeCompare(b.name)).map(h => (
+                                    <option key={h.id} value={h.name}>{h.name}</option>
+                                ))}
+                            </Field>
+                            {errors.name && touched.name && <div className="text-danger">{errors.name}</div>}
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="rating">Rating</label>
+                            <Field as={CFormInput} type="number" id="rating" name="rating" />
+                            {errors.rating && touched.rating && <div className="text-danger">{errors.rating}</div>}
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="description">Description</label>
+                            <Field as={CFormTextarea} id="description" name="description" />
+                            {errors.description && touched.description && <div className="text-danger">{errors.description}</div>}
+                        </div>
+                        <CButton type="submit" color="primary">
+                            {updateIndex === -1 ? "Add" : "Update"}
+                        </CButton>
+                    </Form>
+                )}
+            </Formik>
+
+            <CTable hover>
+                <thead>
+                    <CTableRow>
+                        <CTableHeaderCell>Horoscope</CTableHeaderCell>
+                        <CTableHeaderCell>Rating</CTableHeaderCell>
+                        <CTableHeaderCell>Description</CTableHeaderCell>
+                        <CTableHeaderCell>Action</CTableHeaderCell>
+                    </CTableRow>
+                </thead>
+                <CTableBody>
+                    {items.map((m, i) => (
+                        <CTableRow key={i}>
+                            <CTableDataCell>{m.name}</CTableDataCell>
+                            <CTableDataCell>{m.rating}</CTableDataCell>
+                            <CTableDataCell>{m.description}</CTableDataCell>
+                            <CTableDataCell>
+                                <CButton color="warning" onClick={() => Edit(i, setValues)}>Edit</CButton>
+                                <CButton color="danger" onClick={() => DeleteItem(i)}>Delete</CButton>
+                            </CTableDataCell>
+                        </CTableRow>
+                    ))}
+                </CTableBody>
+            </CTable>
+
+            {tableitems === 12 && (
+                <CButton color="success" onClick={createJsonFile}>Submit</CButton>
+            )}
         </>
     );
 };
