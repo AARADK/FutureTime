@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup'; 
-
-import './scss/style.scss';
+import { useSelector } from 'react-redux';
+import { useColorModes } from '@coreui/react';
+import '/src/scss/style.scss';
+import { AppHeader, AppSidebar, AppFooter, AppContent } from './components';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const FormSample = () => {
 
@@ -34,6 +37,7 @@ const FormSample = () => {
     useEffect(() => {
         setTableItems(
             items.map(m => ({
+                id: m.id,
                 name: m.name,
                 rating: m.rating,
                 description: m.description
@@ -42,18 +46,20 @@ const FormSample = () => {
     }, [items]);
 
     const AddItems = (values, { resetForm }) => {
-        debugger
         if (updateIndex === -1) {
             if (items.findIndex(a => a.name === values.name) >= 0) {
                 alert("Duplicate");
                 return;
             }
-            setItems(prevItems => [...prevItems, values]);
+            setItems(prevItems => [
+                ...prevItems,
+                { id: horoscopes.find(h => h.name===values.name).id, ...values }
+            ]);
         } else {
     
             const currentItem = items[updateIndex];
 
-            if (items.findIndex(a => a.name == values.name && a != currentItem) >= 0) {
+            if (items.findIndex(a => a.name === values.name && a.id != currentItem.id) >= 0) {
                 alert("Duplicate");
                 return;
             }
@@ -82,7 +88,7 @@ const FormSample = () => {
         updatedItems.splice(i, 1);
         setItems(updatedItems);
         setHoroscopes(prevHoroscopes => [
-            ...prevHoroscopes.filter(h => h.name !== itemToDelete.name),
+            ...prevHoroscopes.filter(h => h.id !== itemToDelete.id),
             { id: horoscopes.length + 1, name: itemToDelete.name }
         ]);
     };
@@ -101,73 +107,103 @@ const FormSample = () => {
     };
 
     const tableitems = items.length;
+    const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
+    const storedTheme = useSelector((state) => state.theme)
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.href.split('?')[1])
+        const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0]
+        if (theme) {
+        setColorMode(theme)
+        }
+
+        if (isColorModeSet()) {
+        return
+        }
+
+        setColorMode(storedTheme)
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <Formik
-            initialValues={{
-                date: new Date().toISOString().substring(0, 10),
-                id: '',
-                name: '', 
-                rating: '',
-                description: ''
-            }}
-            validationSchema={validationSchema}
-            onSubmit={AddItems}
-        >
-            {({ handleSubmit, errors, touched, setValues }) => (
-                <Form onSubmit={handleSubmit}>
-                    Date: <Field type='date' name='date' className='input-box' />
-                    <br/>
-                    Horoscope
-                    <Field as="select" name="name" className="input-box" disabled={updateIndex !== -1} >
-                        <option value="">Select Horoscope</option>
-                        {horoscopes.slice().sort((a,b) => a.name.localeCompare(b.name)).map(h => (
-                            <option key={h.id} value={h.name}>{h.name}</option>
-                        ))}
-                    </Field>
-                    {errors.name && touched.name ? <div className="error">{errors.name}</div> : null}
-                    <br />
-                    Rating
-                    <Field as="input" type="number" name="rating" className="input-box" />
-                    {errors.rating && touched.rating ? <div className="error">{errors.rating}</div> : null}
-                    <br />
-                    Description
-                    <Field as="textarea" name="description" className="input-box" />
-                    {errors.description && touched.description ? <div className="error">{errors.description}</div> : null}
-                    <br/>
-                    <button type="submit">
-                        {updateIndex === -1 ? "Add" : "Update"}
-                    </button>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Horoscope</th>
-                                <th>Rating</th>
-                                <th>Description</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {items.map((m, i) => (
-                                <tr key={i}>
-                                    <td>{m.name}</td>
-                                    <td>{m.rating}</td>
-                                    <td>{m.description}</td>
-                                    <td>
-                                        <button type="button" onClick={() => Edit(i, setValues)}>Edit</button>
-                                        <button type="button" onClick={() => DeleteItem(i)}>Del</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                    {tableitems === 12 ? (
-                        <button type='button' onClick={createJsonFile}>Submit</button>
-                    ) : null}
-                </Form>
-            )}
-        </Formik>
+        <>
+            <Router>
+                <div>
+                    <AppSidebar />
+                    <div className="wrapper d-flex flex-column min-vh-100">
+                        <AppHeader />
+                        <div className="body flex-grow-1">
+                            {
+                                <Formik
+                                initialValues={{
+                                    date: new Date().toISOString().substring(0, 10),
+                                    id: '',
+                                    name: '',
+                                    rating: '',
+                                    description: ''
+                                }}
+                                validationSchema={validationSchema}
+                                onSubmit={AddItems}
+                            >
+                                {({ handleSubmit, errors, touched, setValues }) => (
+                                    <Form onSubmit={handleSubmit}>
+                                        Date: <Field type='date' name='date' className='input-box' />
+                                        <br/>
+                                        Horoscope
+                                        <Field as="select" name="name" className="input-box" disabled={updateIndex !== -1} >
+                                            <option value="">Select Horoscope</option>
+                                            {horoscopes.slice().sort((a,b) => a.name.localeCompare(b.name)).map(h => (
+                                                <option key={h.id} value={h.name}>{h.name}</option>
+                                            ))}
+                                        </Field>
+                                        {errors.name && touched.name ? <div className="error">{errors.name}</div> : null}
+                                        <br />
+                                        Rating
+                                        <Field as="input" type="number" name="rating" className="input-box" />
+                                        {errors.rating && touched.rating ? <div className="error">{errors.rating}</div> : null}
+                                        <br />
+                                        Description
+                                        <Field as="textarea" name="description" className="input-box" />
+                                        {errors.description && touched.description ? <div className="error">{errors.description}</div> : null}
+                                        <br/>
+                                        <button type="submit">
+                                            {updateIndex === -1 ? "Add" : "Update"}
+                                        </button>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Horoscope</th>
+                                                    <th>Rating</th>
+                                                    <th>Description</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {items.map((m, i) => (
+                                                    <tr key={i}>
+                                                        <td>{m.name}</td>
+                                                        <td>{m.rating}</td>
+                                                        <td>{m.description}</td>
+                                                        <td>
+                                                            <button type="button" onClick={() => Edit(i, setValues)}>Edit</button>
+                                                            <button type="button" onClick={() => DeleteItem(i)}>Del</button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        {tableitems === 12 ? (
+                                            <button type='button' onClick={createJsonFile}>Submit</button>
+                                        ) : null}
+                                    </Form>
+                                )}
+                            </Formik>
+                            }
+                        </div>
+                        <AppFooter />
+                    </div>
+                </div>
+            </Router>
+        </>
     );
 };
 

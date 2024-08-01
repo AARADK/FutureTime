@@ -13,5 +13,6 @@ createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     {/* <DailyRashiUpdates/> */}
     <FormSample />
+    {/* <App /> */}
   </Provider>,
 )

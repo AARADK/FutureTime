@@ -27,9 +27,13 @@ const _nav = [
     },
   },
   {
+    component: CNavTitle,
+    name: 'FutureTime'
+  },
+  {
     component: CNavItem,
     name: 'Daily Rashi Updates',
-    to: '/theme/colors',
+    to: '/rashi',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
