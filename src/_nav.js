@@ -32,9 +32,45 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Daily Rashi Updates',
+    name: 'Daily Update',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-    to: '/form-sample'
+    to: '/daily-update'
+  },
+  {
+    component: CNavItem,
+    name: 'G Profile',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    to: '/gprofile'
+  },
+  {
+    component: CNavItem,
+    name: 'Inquiry',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    to: '/inquiry'
+  },
+  {
+    component: CNavItem,
+    name: 'Notification',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    to: '/notification'
+  },
+  {
+    component: CNavItem,
+    name: 'Report',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    to: '/report'
+  },
+  {
+    component: CNavItem,
+    name: 'Setup',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    to: '/setup'
+  },
+  {
+    component: CNavItem,
+    name: 'Task',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    to: '/task'
   },
   {
     component: CNavTitle,

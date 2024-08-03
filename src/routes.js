@@ -51,11 +51,23 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
-const FormSample = React.lazy(() => import('./FormSample'))
+const DailyUpdate = React.lazy(() => import('./futuretime/DailyUpdate'))
+const GProfile = React.lazy(() => import('./futuretime/GProfile'))
+const Inquiry = React.lazy(() => import('./futuretime/Inquiry'))
+const Notification = React.lazy(() => import('./futuretime/Notification'))
+const Report = React.lazy(() => import('./futuretime/Report'))
+const Setup = React.lazy(() => import('./futuretime/Setup'))
+const Task = React.lazy(() => import('./futuretime/Task'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/form-sample', name: 'Dailyupdate', element: FormSample },
+  { path: '/daily-update', name: 'Dailyupdate', element: DailyUpdate },
+  { path: '/gprofile', name: 'GProfile', element: GProfile },
+  { path: '/inquiry', name: 'Inquiry', element: Inquiry },
+  { path: '/notification', name: 'Notification', element: Notification },
+  { path: '/report', name: 'Report', element: Report },
+  { path: '/setup', name: 'Setup', element: Setup },
+  { path: '/task', name: 'Task', element: Task },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

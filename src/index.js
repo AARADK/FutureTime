@@ -7,7 +7,7 @@ import App from './App'
 import store from './store'
 import DailyRashiUpdates from './views/rashi/DailyRashiUpdates'
 import Dashboard from './views/dashboard/Dashboard'
-import FormSample from './FormSample'
+import FormSample from './futuretime/DailyUpdate'
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>

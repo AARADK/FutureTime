@@ -6,7 +6,7 @@ import { useColorModes } from '@coreui/react';
 import { CFormInput, CFormSelect, CFormTextarea, CButton, CTable, CTableBody, CTableHeaderCell, CTableRow, CTableDataCell } from '@coreui/react';
 import '/src/scss/style.scss';
 
-const FormSample = () => {
+const DailyUpdate = () => {
     const [tableItems, setTableItems] = useState([]);
     const [updateIndex, setUpdateIndex] = useState(-1);
     const [items, setItems] = useState([]);
@@ -196,4 +196,4 @@ const FormSample = () => {
     );
 };
 
-export default FormSample;
+export default DailyUpdate;
