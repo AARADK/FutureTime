@@ -34,7 +34,7 @@ const _nav = [
     component: CNavItem,
     name: 'Daily Update',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-    to: '/daily-update'
+    to: '/dailyupdate/list'
   },
   {
     component: CNavItem,

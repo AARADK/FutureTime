@@ -1,29 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { Formik, Field, Form } from 'formik';
-import * as Yup from 'yup'; 
+import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import { useColorModes } from '@coreui/react';
 import { CFormInput, CFormSelect, CFormTextarea, CButton, CTable, CTableBody, CTableHeaderCell, CTableRow, CTableDataCell } from '@coreui/react';
 import '/src/scss/style.scss';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useUrl } from '../contexts/UrlContext';
 
 const DailyUpdate = () => {
     const [tableItems, setTableItems] = useState([]);
     const [updateIndex, setUpdateIndex] = useState(-1);
     const [items, setItems] = useState([]);
-    const [horoscopes, setHoroscopes] = useState([
-        {id: 1, name: "Aquarius"},
-        {id: 2, name: "Aries"},
-        {id: 3, name: "Cancer"},
-        {id: 4, name: "Capricorn"},
-        {id: 5, name: "Gemini"},
-        {id: 6, name: "Leo"},
-        {id: 7, name: "Libra"},
-        {id: 8, name: "Pisces"},
-        {id: 9, name: "Sagittarius"},
-        {id: 10, name: "Scorpio"},
-        {id: 11, name: "Taurus"},
-        {id: 12, name: "Virgo"},
-    ]);
+    const [horoscopes, setHoroscopes] = useState([]);
+
+    useEffect(()=>{
+        fetch("http://13.202.94.163:7001/DailyRashiUpdates/LoadBaseData") 
+        .then(response => {
+        // Check if the response status is OK (status code 200-299)
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        // Parse the JSON from the response
+            return response.json();
+        })
+        .then(data => {
+            setHoroscopes(data.data.rashi)
+        })
+        .catch(error => {
+        // Handle any errors that occur during the fetch operation
+        console.error('There was a problem with the fetch operation:', error);
+        });
+    },[])
 
     const validationSchema = Yup.object({
         date: Yup.date().required('Date is required'),
@@ -33,15 +41,29 @@ const DailyUpdate = () => {
     });
 
     useEffect(() => {
-        setTableItems(
-            items.map(m => ({
-                id: m.id,
-                name: m.name,
-                rating: m.rating,
-                description: m.description
-            }))
-        );
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        if (id) {
+            const item = items.find(item => item.id === parseInt(id));
+            if (item) {
+                setUpdateIndex(items.indexOf(item));
+            }
+        }
     }, [items]);
+
+    useEffect(() => {
+        setTableItems(items.map(m => ({
+            id: m.id,
+            date: m.date,
+            name: m.name,
+            rating: m.rating,
+            description: m.description
+        })));
+    }, [items]);
+
+    const navigate = useNavigate();
+    const url = useUrl(); // Use the URL context
 
     const AddItems = (values, { resetForm }) => {
         if (updateIndex === -1) {
@@ -49,7 +71,7 @@ const DailyUpdate = () => {
                 alert("Duplicate");
                 return;
             }
-            const newItem = { id: horoscopes.find(h => h.name === values.name).id, ...values };
+            const newItem = { id: Date.now(), ...values };
             setItems(prevItems => [...prevItems, newItem]);
         } else {
             const currentItem = items[updateIndex];
@@ -77,35 +99,20 @@ const DailyUpdate = () => {
     };
 
     const DeleteItem = (i) => {
-        const itemToDelete = items[i];
         const updatedItems = [...items];
         updatedItems.splice(i, 1);
         setItems(updatedItems);
-        setHoroscopes(prevHoroscopes => [
-            ...prevHoroscopes.filter(h => h.id !== itemToDelete.id),
-            { id: horoscopes.length + 1, name: itemToDelete.name }
-        ]);
     };
 
-    const createJsonFile = () => {
-        const json = JSON.stringify(tableItems, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'horoscopeData.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    };
+    const updateList = () => {
+        navigate('/dailyupdate/list');
+    }
 
-    const tableitems = items.length;
     const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme');
     const storedTheme = useSelector((state) => state.theme);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.href.split('?')[1]);
+        const urlParams = new URLSearchParams(window.location.search);
         const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0];
         if (theme) {
             setColorMode(theme);
@@ -188,9 +195,8 @@ const DailyUpdate = () => {
                     ))}
                 </CTableBody>
             </CTable>
-
-            {tableitems === 12 && (
-                <CButton color="success" onClick={createJsonFile}>Submit</CButton>
+            {tableItems.length === 12 && (
+                <CButton color="success" onClick={updateList}>Submit</CButton>
             )}
         </>
     );

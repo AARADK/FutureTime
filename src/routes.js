@@ -58,10 +58,13 @@ const Notification = React.lazy(() => import('./futuretime/Notification'))
 const Report = React.lazy(() => import('./futuretime/Report'))
 const Setup = React.lazy(() => import('./futuretime/Setup'))
 const Task = React.lazy(() => import('./futuretime/Task'))
+const List = React.lazy(() => import('./futuretime/list'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/daily-update', name: 'Dailyupdate', element: DailyUpdate },
+  { path: '/dailyupdate/list', name: 'Daily Update List', element: List },
+  { path: '/dailyupdate/manage', name: 'Manage', element: DailyUpdate },
+  { path: '/dailyupdate/manage/:id', name: 'Manage', element: DailyUpdate },
   { path: '/gprofile', name: 'GProfile', element: GProfile },
   { path: '/inquiry', name: 'Inquiry', element: Inquiry },
   { path: '/notification', name: 'Notification', element: Notification },

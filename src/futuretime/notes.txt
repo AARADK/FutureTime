@@ -1,0 +1,14 @@
+data.map(m=>({...m,rashi_name:rashi.filter(f=>f.id==m.rashi_id)[0].name}))
+
+var rashi = [{id:1,name:"mesh"},{id:2,name:"brish"}];
+var data = [{rashi_id:1,rating:10},{rashi_id:2,rating:5}]
+data.map(
+    m=>(
+        {
+            ...m, rashi_name:rashi.filter(
+                f=>f.id==m.rashi_id
+            )[0].name
+        }
+    )
+);
+
