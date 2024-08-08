@@ -8,36 +8,25 @@ const List = () => {
     const navigate = useNavigate();
     const url = useUrl(); 
 
-    useEffect(()=>{
-        fetch("http://13.202.94.163:7001/DailyRashiUpdates/getalllist") 
+    useEffect(() => {
+        fetch('http://52.66.24.172:7001/DailyRashiUpdates/GetAllList')
         .then(response => {
-        // Check if the response status is OK (status code 200-299)
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        // Parse the JSON from the response
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
             return response.json();
         })
-        .then(data1 => {
-            setItems(data1.data.list)
+        .then(data => {
+            if (data.error_code === "0" && data.data && data.data.list) {
+                setItems(data.data.list);
+            } else {
+                console.error('Unexpected data structure:', data);
+            }
         })
         .catch(error => {
-        // Handle any errors that occur during the fetch operation
-        console.error('There was a problem with the fetch operation:', error);
-        });
-    },[])
-
-    // const DateContext = createContext();
-
-    useEffect(() => {
-        const fetchItems = async () => {
-            const response = await fetch(`${url}/api/items`);
-            const data = await response.json();
-            setItems(data);
-        };
-
-        fetchItems();
-    }, [url]);
+            console.error('There was a problem with the fetch operation:', error);
+        });
+        }, []);
 
     const handleEdit = (id) => {
         navigate(`/dailyupdate/manage?id=${id}`);
@@ -59,7 +48,7 @@ const List = () => {
                     </thead>
                     <CTableBody>
                         {items.map((item) => (
-                            <CTableRow key={item.id}>
+                            <CTableRow key={item._id}>
                                 <CTableDataCell>{item.transaction_date}</CTableDataCell>
                                 <CTableDataCell>
                                     <CButton color="warning" onClick={() => handleEdit(item._id)}>Edit</CButton>
