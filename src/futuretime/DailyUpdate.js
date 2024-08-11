@@ -153,9 +153,6 @@ const DailyUpdate = () => {
     
         const urlPath = location.pathname + location.search;
 
-        console.log(urlPath)
-        console.log(location.search)
-    
         if (urlPath.includes('/manage') && !location.search) {
             fetch('http://52.66.24.172:7001/DailyRashiUpdates/create', {
                 method: 'POST',
